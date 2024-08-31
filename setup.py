@@ -15,11 +15,11 @@ with open("requirements.txt", "r") as r:
 
 setup(
     name="flaskwebgui",
-    version="1.1.3",
+    version="1.1.4",
     description="Create desktop applications with Flask/Django/FastAPI!",
-    url="https://github.com/ClimenteA/flaskwebgui",
-    author="Climente Alin",
-    author_email="climente.alin@gmail.com",
+    url="https://github.com/malkarouri/flaskwebgui",
+    author="Muhammad Alkarouri",
+    author_email="malkarouri@gmail.com",
     license="MIT",
     py_modules=["flaskwebgui"],
     install_requires=install_requires,

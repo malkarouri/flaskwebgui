@@ -8,7 +8,7 @@ import platform
 import subprocess
 import socketserver
 import multiprocessing
-from multiprocessing import Process
+from multiprocessing import Process, Value
 from threading import Thread
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Union
@@ -18,6 +18,7 @@ import psutil
 
 FLASKWEBGUI_USED_PORT = None
 FLASKWEBGUI_BROWSER_PROCESS = None
+BROWSER_PID = None
 
 OPERATING_SYSTEM = platform.system().lower()
 PY = "python3" if OPERATING_SYSTEM in ["linux", "darwin"] else "python"
@@ -42,6 +43,8 @@ def kill_port(port: int):
 def close_application():
     if FLASKWEBGUI_BROWSER_PROCESS is not None:
         FLASKWEBGUI_BROWSER_PROCESS.terminate()
+    if BROWSER_PID is not None:
+        os.kill(BROWSER_PID.value, signal.SIGKILL)
 
     kill_port(FLASKWEBGUI_USED_PORT)
 
@@ -129,7 +132,8 @@ class DefaultServerFastApi:
     @staticmethod
     def server(**server_kwargs):
         import uvicorn
-
+        global BROWSER_PID
+        BROWSER_PID = server_kwargs.pop('BROWSER_PID', None)
         uvicorn.run(**server_kwargs)
 
 
@@ -263,6 +267,7 @@ class FlaskUI:
         print("Command:", " ".join(self.browser_command))
         global FLASKWEBGUI_BROWSER_PROCESS
         FLASKWEBGUI_BROWSER_PROCESS = subprocess.Popen(self.browser_command)
+        BROWSER_PID.value = FLASKWEBGUI_BROWSER_PROCESS.pid
         FLASKWEBGUI_BROWSER_PROCESS.wait()
 
         if self.browser_path is None:
@@ -286,8 +291,10 @@ class FlaskUI:
 
         if OPERATING_SYSTEM == "darwin":
             multiprocessing.set_start_method("fork")
+            global BROWSER_PID
+            BROWSER_PID = Value('i', -1)
             server_process = Process(
-                target=self.server, kwargs=self.server_kwargs or {}
+                target=self.server, kwargs=(self.server_kwargs or {}) | {"BROWSER_PID": BROWSER_PID}
             )
         else:
             server_process = Thread(target=self.server, kwargs=self.server_kwargs or {})
