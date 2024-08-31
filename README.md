@@ -1,5 +1,5 @@
 ## Flaskwebgui
-  
+
 [![Downloads](https://pepy.tech/badge/flaskwebgui)](https://pepy.tech/project/flaskwebgui)
 [![PyPI](https://img.shields.io/pypi/v/flaskwebgui?color=blue)](https://pypi.org/project/flaskwebgui/)
 
@@ -39,7 +39,7 @@ Let's say we have the following flask application:
 ```py
 #main.py
 
-from flask import Flask  
+from flask import Flask
 from flask import render_template
 from flaskwebgui import FlaskUI # import FlaskUI
 
@@ -47,11 +47,11 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def hello():  
+def hello():
     return render_template('index.html')
 
 @app.route("/home", methods=['GET'])
-def home(): 
+def home():
     return render_template('some_page.html')
 
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
   # app.run()
   # If you want to view the flaskwebgui window:
   FlaskUI(app=app, server="flask").run()
-   
+
 ```
 
 Install [`waitress`](https://pypi.org/project/waitress/) for more performance.
@@ -81,11 +81,11 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 @app.route("/")
-def hello():  
+def hello():
     return render_template('index.html')
 
 @app.route("/home", methods=['GET'])
-def home(): 
+def home():
     return render_template('some_page.html')
 
 
@@ -129,17 +129,17 @@ async def root(request: Request):
 
 
 @app.get("/home", response_class=HTMLResponse)
-async def home(request: Request): 
+async def home(request: Request):
     return templates.TemplateResponse("some_page.html", {"request": request})
 
 
 if __name__ == "__main__":
-    
+
     FlaskUI(app=app, server="fastapi").run()
 
 ```
 
-FastApi will be served by `uvicorn`.  
+FastApi will be served by `uvicorn`.
 
 
 ## Usage with Django
@@ -152,7 +152,7 @@ Next to `manage.py` file create a `gui.py` file where you need to import `applic
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
-├── gui.py # this 
+├── gui.py # this
 ├── manage.py
 ```
 
@@ -169,7 +169,7 @@ if __name__ == "__main__":
 ```
 Next start the application with:
 ```py
-python gui.py  
+python gui.py
 ```
 
 Install `waitress` for more performance.
@@ -177,7 +177,7 @@ Install `waitress` for more performance.
 
 ## Close application using a route
 
-You can close the application using the `close_application` from flaskwebgui. 
+You can close the application using the `close_application` from flaskwebgui.
 
 ```python
 
@@ -191,7 +191,7 @@ def close_window():
 
 ```
 
-And somewhere a link: 
+And somewhere a link:
 
 ```html
 
@@ -222,7 +222,7 @@ See [issue 135](https://github.com/ClimenteA/flaskwebgui/issues/135).
         }
     };
 
-    // Prevent right-click 
+    // Prevent right-click
     document.addEventListener("contextmenu", function (e) {
         e.preventDefault();
     });
@@ -362,5 +362,3 @@ It's a combination of https://github.com/Widdershin/flask-desktop and https://gi
 It has some advantages over flask-desktop because it doesn't use PyQt5, so you won't have any issues regarding licensing and over Eel because you don't need to learn any logic other than Flask/Django/FastAPI/etc.
 
 **Submit any questions/issues you have! Fell free to fork it and improve it!**
-
-

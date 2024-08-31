@@ -24,12 +24,10 @@ def close_window():
 
 
 def start_flask_socketio(**server_kwargs):
-
     server_kwargs["socketio"].run(server_kwargs["app"], port=server_kwargs["port"])
 
 
 if __name__ == "__main__":
-
     # Default start flask
 
     FlaskUI(

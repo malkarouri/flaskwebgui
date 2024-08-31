@@ -3,14 +3,12 @@ from djangodesktop.wsgi import application as app
 
 
 def start_django(**server_kwargs):
-
     import waitress
 
     waitress.serve(**server_kwargs)
 
 
 if __name__ == "__main__":
-
     # Default start django
 
     FlaskUI(

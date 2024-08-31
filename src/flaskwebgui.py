@@ -38,6 +38,8 @@ def kill_port(port: int):
                     proc.send_signal(signal.SIGTERM)
         except psutil.AccessDenied:
             continue
+        except psutil.NoSuchProcess:
+            break
 
 
 def close_application():
@@ -132,8 +134,9 @@ class DefaultServerFastApi:
     @staticmethod
     def server(**server_kwargs):
         import uvicorn
+
         global BROWSER_PID
-        BROWSER_PID = server_kwargs.pop('BROWSER_PID', None)
+        BROWSER_PID = server_kwargs.pop("BROWSER_PID", None)
         uvicorn.run(**server_kwargs)
 
 
@@ -234,7 +237,7 @@ class FlaskUI:
         self.url = f"http://127.0.0.1:{self.port}"
 
         self.browser_path = (
-                self.browser_path or browser_path_dispacher.get(OPERATING_SYSTEM)()
+            self.browser_path or browser_path_dispacher.get(OPERATING_SYSTEM)()
         )
         self.browser_command = self.browser_command or self.get_browser_command()
 
@@ -292,9 +295,10 @@ class FlaskUI:
         if OPERATING_SYSTEM == "darwin":
             multiprocessing.set_start_method("fork")
             global BROWSER_PID
-            BROWSER_PID = Value('i', -1)
+            BROWSER_PID = Value("i", -1)
             server_process = Process(
-                target=self.server, kwargs=(self.server_kwargs or {}) | {"BROWSER_PID": BROWSER_PID}
+                target=self.server,
+                kwargs=(self.server_kwargs or {}) | {"BROWSER_PID": BROWSER_PID},
             )
         else:
             server_process = Thread(target=self.server, kwargs=self.server_kwargs or {})
